@@ -3,7 +3,7 @@ package renderer;
 import components.SpriteRenderer;
 import org.joml.Vector4f;
 import psycho.Window;
-import util.AssetPool;
+import util.*;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
