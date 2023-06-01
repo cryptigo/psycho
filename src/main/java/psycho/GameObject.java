@@ -1,5 +1,6 @@
 package psycho;
 
+import components.Component;
 import util.Logger;
 
 import java.util.ArrayList;

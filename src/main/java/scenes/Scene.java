@@ -1,8 +1,13 @@
-package psycho;
+package scenes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import components.Component;
+import components.ComponentDeserializer;
 import imgui.ImGui;
+import psycho.Camera;
+import psycho.GameObject;
+import psycho.GameObjectDeserializer;
 import renderer.Renderer;
 
 import java.io.FileWriter;

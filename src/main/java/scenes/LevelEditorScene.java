@@ -1,15 +1,17 @@
-package psycho;
+package scenes;
 
 import components.Sprite;
 import components.Spritesheet;
 import imgui.ImGui;
 import imgui.ImVec2;
+import psycho.Camera;
+import psycho.GameObject;
+import psycho.Transform;
+import scenes.Scene;
 import util.*;
 import components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class LevelEditorScene extends Scene {
 

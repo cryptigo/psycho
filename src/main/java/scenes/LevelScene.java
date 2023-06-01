@@ -1,5 +1,7 @@
-package psycho;
+package scenes;
 
+import psycho.Window;
+import scenes.Scene;
 import util.Logger;
 
 public class LevelScene extends Scene {

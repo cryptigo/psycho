@@ -1,8 +1,9 @@
-package psycho;
+package components;
 
 import imgui.ImGui;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import psycho.GameObject;
 import util.Logger;
 
 import java.lang.reflect.Field;

@@ -3,7 +3,6 @@ package components;
 import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import psycho.Component;
 import psycho.Transform;
 import renderer.Texture;
 import util.Logger;

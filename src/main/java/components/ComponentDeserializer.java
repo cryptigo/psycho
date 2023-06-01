@@ -1,6 +1,7 @@
-package psycho;
+package components;
 
 import com.google.gson.*;
+import components.Component;
 
 import java.lang.reflect.Type;
 
