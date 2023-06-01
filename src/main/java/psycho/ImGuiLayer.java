@@ -8,6 +8,7 @@ import imgui.enums.ImGuiConfigFlags;
 import imgui.enums.ImGuiKey;
 import imgui.enums.ImGuiMouseCursor;
 import imgui.gl3.ImGuiImplGl3;
+import util.Logger;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -26,11 +27,15 @@ public class ImGuiLayer {
 
     // Initialize Dear ImGui
     public void initImGui() {
+        Logger.logInfo("Initializing ImGui.");
+
         // IMPORTANT! Line is critical for Dear ImGui to work.
         ImGui.createContext();
 
         // ------------------------------------------------------------
         // Initialize ImGuiIO config
+        Logger.logDebug("Configuring ImGui.");
+
         final ImGuiIO io = ImGui.getIO();
 
         io.setIniFilename("assets/config/imgui.ini");
@@ -41,6 +46,7 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+        Logger.logDebug("Setting up ImGui keyboard mapping.");
         final int[] keyMap = new int[ImGuiKey.COUNT];
         keyMap[ImGuiKey.Tab] = GLFW_KEY_TAB;
         keyMap[ImGuiKey.LeftArrow] = GLFW_KEY_LEFT;
@@ -68,6 +74,7 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Mouse cursors mapping
+        Logger.logDebug("Setting up ImGui mouse cursor mapping.");
         mouseCursors[ImGuiMouseCursor.Arrow] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
         mouseCursors[ImGuiMouseCursor.TextInput] = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
         mouseCursors[ImGuiMouseCursor.ResizeAll] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
@@ -80,6 +87,7 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // GLFW callbacks to handle user input
+        Logger.logDebug("Setting up GLFW callbacks for user input.");
 
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
@@ -140,17 +148,39 @@ public class ImGuiLayer {
             }
         });
 
+        // ------------------------------------------------------------
+        // Font setup
+        Logger.logDebug("Setting fonts up with ImGui.");
+
+        final ImFontAtlas fontAtlas = io.getFonts();
+        final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+
+        // Glyphs could be added per-font as well as per config used globally like here
+        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+
+        // Fonts merge example
+        fontConfig.setPixelSnapH(true);
+        fontAtlas.addFontFromFileTTF("assets/fonts/OpenSans.ttf", 32, fontConfig);
+        Logger.logInfo("Using font 'assets/fonts/OpenSans.ttf', size: 32");
+
+        fontConfig.destroy(); // After all fonts were added we don't need this config more
+
+        // ------------------------------------------------------------
+        // Use freetype instead of stb_truetype to build a fonts texture
+        ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).
         // ImGui context should be created as well.
         imGuiGl3.init("#version 440 core");
     }
 
-    public void update(float dt) {
+    public void update(float dt, Scene currentScene) {
         startFrame(dt);
 
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame();
+        currentScene.sceneImgui();
         ImGui.showDemoWindow();
         ImGui.render();
 
@@ -186,6 +216,7 @@ public class ImGuiLayer {
 
     // If you want to clean a room after yourself - do it by yourself
     private void destroyImGui() {
+        Logger.logInfo("Destroying ImGui.");
         imGuiGl3.dispose();
         ImGui.destroyContext();
     }

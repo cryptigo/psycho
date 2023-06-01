@@ -1,6 +1,6 @@
 package psycho;
 
-import util.ColoredLogger;
+import util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class GameObject {
                 try {
                     return componentClass.cast(c);
                 } catch (ClassCastException e) {
-                    e.printStackTrace();
-                    assert false : "Error: Casting component.";
+                    Logger.logException(e);
+                    Logger.logError("Failed to cast component.");
                 }
             }
         }
@@ -41,6 +41,7 @@ public class GameObject {
     }
 
     public <T extends Component> void removeComponent(Class<T> componentClass) {
+        Logger.logDebug("Removing component: " + componentClass.getName());
         for (int i=0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
@@ -51,6 +52,7 @@ public class GameObject {
     }
 
     public void addComponent(Component c) {
+        Logger.logDebug("Adding component: " + c.getClass().getName());
         this.components.add(c);
         c.gameObject = this;
     }
@@ -64,6 +66,12 @@ public class GameObject {
     public void start() {
         for (int i=0; i < components.size(); i++) {
             components.get(i).start();
+        }
+    }
+
+    public void imgui() {
+        for (Component c : components) {
+            c.imgui();
         }
     }
 

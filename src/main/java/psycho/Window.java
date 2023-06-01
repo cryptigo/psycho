@@ -3,8 +3,7 @@ package psycho;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import util.ColoredLogger;
-import util.Time;
+import util.Logger;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -39,18 +38,17 @@ public class Window {
         switch (newScene) {
             case 0:
                 currentScene = new LevelEditorScene();
-                currentScene.init();
-                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
-                currentScene.init();
-                currentScene.start();
                 break;
             default:
                 assert false : "Unknown scene '" + newScene + "'";
                 break;
         }
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
     }
 
     public static Window get() {
@@ -66,7 +64,8 @@ public class Window {
     }
 
     public void run() {
-        ColoredLogger.info("LWJGL Version: " + Version.getVersion());
+        Logger.logInfo("LWJGL Version: " + Version.getVersion());
+
 
         init();
         loop();
@@ -82,27 +81,33 @@ public class Window {
     }
 
     public void init() {
+        Logger.logInfo("Initializing Window");
         // Setup an error callback
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW
         if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW.");
+            Exception e = new IllegalStateException("Unable to initialize GLFW.");
+            Logger.logFatalException(e);
         }
 
         // Configure GLFW
+        Logger.logInfo("Configuring GLFW.");
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the window
+        Logger.logInfo("Creating the GLFW window.");
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
-            throw new IllegalStateException("Failed to create the GLFW window.");
+            Exception e = new IllegalStateException("Failed to create the GLFW window.");
+            Logger.logFatalException(e);
         }
 
         // Setup callbacks
+        Logger.logInfo("Setting up GLFW callbacks.");
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
@@ -113,20 +118,28 @@ public class Window {
         });
 
         // Make the OpenGL context current
+        Logger.logInfo("Making the OpenGL context current.");
         glfwMakeContextCurrent(glfwWindow);
 
         // Enable VSync
+        Logger.logInfo("Enabling VSync for the GLFW window.");
         glfwSwapInterval(1);
 
         // Make the window visible
+        Logger.logInfo("Setting window to be visible.");
         glfwShowWindow(glfwWindow);
 
         // Enable OpenGL LWJGL interop
+        Logger.logInfo("Creating LWJGL OpenGL capabilities.");
         GL.createCapabilities();
 
-        // Set OpenGL Blend function
+        // Setup OpenGL Blend function
+        Logger.logInfo("Setting OpenGL blend function.");
+        Logger.logInfo("GL_BLEND_FUNCTION: GL_ONE, GL_ONE_MINUS_SRC_ALPHA");
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        Logger.logInfo("Initializing the ImGui layer.");
         this.imguiLayer = new ImGuiLayer(glfwWindow);
         this.imguiLayer.initImGui();
 
@@ -150,13 +163,15 @@ public class Window {
                 currentScene.update(dt);
             }
 
-            this.imguiLayer.update(dt);
+            this.imguiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
 
             endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+        Logger.logInfo("Saving and exiting the scene.");
+        currentScene.saveExit();
     }
 
     public static int getWidth() {
