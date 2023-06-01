@@ -1,5 +1,7 @@
 package psycho;
 
+import util.ColoredLogger;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -11,6 +13,7 @@ public class MouseListener {
     private boolean isDragging;
 
     private MouseListener() {
+        ColoredLogger.info("MouseListener constructed.");
         this.scrollX = 0.0;
         this.scrollY = 0.0;
         this.xPos = 0.0;
@@ -38,10 +41,12 @@ public class MouseListener {
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
             if (button < get().mouseButtonPressed.length) {
+                ColoredLogger.fine("Mouse Button pressed: " + button);
                 get().mouseButtonPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
             if (button < get().mouseButtonPressed.length) {
+                ColoredLogger.fine("Mouse Button released: " + button);
                 get().mouseButtonPressed[button] = false;
                 get().isDragging = false;
             }

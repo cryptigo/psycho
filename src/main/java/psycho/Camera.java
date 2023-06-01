@@ -3,12 +3,14 @@ package psycho;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import util.ColoredLogger;
 
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix;
     public Vector2f position;
 
     public Camera(Vector2f position) {
+        ColoredLogger.info("Created Camera Object");
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();

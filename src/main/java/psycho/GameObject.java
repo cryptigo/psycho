@@ -1,5 +1,7 @@
 package psycho;
 
+import util.ColoredLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +11,14 @@ public class GameObject {
     public Transform transform;
 
     public GameObject(String name) {
+        ColoredLogger.fine("Created new GameObject. Name: " + name);
         this.name = name;
         this.components = new ArrayList<>();
         this.transform = new Transform();
     }
 
     public GameObject(String name, Transform transform) {
+        ColoredLogger.fine("Created new GameObject. Name: '" + name + "'");
         this.name = name;
         this.components = new ArrayList<>();
         this.transform = transform;
