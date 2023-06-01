@@ -29,9 +29,9 @@ public class Window {
         this.height = 1080;
         this.title = "PsychoEngine";
 
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 0.7f;
+        g = 0.1f;
+        b = 0.2f;
         a = 1;
     }
 
