@@ -15,20 +15,6 @@ public class SpriteRenderer extends Component {
     private Transform lastTransform;
     private boolean isDirty = true;
 
-//    public SpriteRenderer(Vector4f color) {
-//        Logger.logInfo("New SpriteRenderer <" + this.getClass().getName() + "> created.");
-//        this.color = color;
-//        this.sprite = new Sprite(null);
-//        this.isDirty = true;
-//    }
-//
-//    public SpriteRenderer(Sprite sprite) {
-//        Logger.logInfo("New SpriteRenderer <" + this.getClass().getName() + "> created.");
-//        this.sprite = sprite;
-//        this.color = new Vector4f(1, 1, 1, 1);
-//        this.isDirty = true;
-//    }
-
     @Override
     public void start() {
         Logger.logInfo("SpriteRenderer <" + this.getClass().getName() + "> starting.");
@@ -82,5 +68,9 @@ public class SpriteRenderer extends Component {
 
     public void setClean() {
         this.isDirty = false;
+    }
+
+    public void setTexture(Texture texture) {
+        this.sprite.setTexture(texture);
     }
 }
