@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-    private static int MAX_LINES = 500;
+    private static int MAX_LINES = 5000;
 
     private static List<Line2D> lines = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class DebugDraw {
         glEnableVertexAttribArray(1);
 
         // Draw the batch
-        glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, lines.size() * 6);
 
         // Disable location
         glDisableVertexAttribArray(0);
