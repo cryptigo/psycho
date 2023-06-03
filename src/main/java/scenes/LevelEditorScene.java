@@ -1,12 +1,16 @@
 package scenes;
 
+import components.MouseControls;
 import components.Sprite;
 import components.Spritesheet;
 import imgui.ImGui;
 import imgui.ImVec2;
+import org.joml.Vector3f;
 import psycho.Camera;
 import psycho.GameObject;
+import psycho.Prefabs;
 import psycho.Transform;
+import renderer.DebugDraw;
 import scenes.Scene;
 import util.*;
 import components.SpriteRenderer;
@@ -18,6 +22,8 @@ public class LevelEditorScene extends Scene {
     private GameObject obj1;
     private Spritesheet sprites;
     private SpriteRenderer obj1Sprite;
+
+    private MouseControls mouseControls = new MouseControls();
 
     public LevelEditorScene() {
         Logger.logInfo("Created LevelEditorScene object.");
@@ -61,8 +67,15 @@ public class LevelEditorScene extends Scene {
                         16, 16, 81, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");    }
 
+    float t = 0.0f;
     @Override
     public void update(float dt) {
+        mouseControls.update(dt);
+
+        float x = ((float)Math.sin(t) * 200.0f) + 600;
+        float y = ((float)Math.cos(t) * 200.0f) + 400;
+        t += 0.05f;
+        DebugDraw.addLine2D(new Vector2f(600, 400), new Vector2f(x, y), new Vector3f(0, 0, 1));
         for (GameObject go : this.gameObjects) {
             go.update(dt);
         }
@@ -91,7 +104,8 @@ public class LevelEditorScene extends Scene {
 
             ImGui.pushID(i);
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
-                System.out.println("Button " + i + "clicked");
+                GameObject object = Prefabs.generateSpriteObject(sprite, spriteWidth, spriteHeight);
+                mouseControls.pickupObject(object);
             }
             ImGui.popID();
 
