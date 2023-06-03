@@ -12,42 +12,39 @@ import util.Logger;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+
 public class ImGuiLayer {
+
     private long glfwWindow;
 
-    // Use mouse cursors provided by GLFW
+    // Mouse cursors provided by GLFW
     private final long[] mouseCursors = new long[ImGuiMouseCursor.COUNT];
 
-    // LWJGL3 renderer
+    // LWJGL3 renderer (SHOULD be initialized)
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     public ImGuiLayer(long glfwWindow) {
         this.glfwWindow = glfwWindow;
     }
 
-    // Initialize Dear ImGui
+    // Initialize Dear ImGui.
     public void initImGui() {
-        Logger.logInfo("Initializing ImGui.");
-
-        // IMPORTANT! Line is critical for Dear ImGui to work.
+        // IMPORTANT!!
+        // This line is critical for Dear ImGui to work.
         ImGui.createContext();
 
         // ------------------------------------------------------------
         // Initialize ImGuiIO config
-        Logger.logDebug("Configuring ImGui.");
-
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename("assets/config/imgui.ini");
-        io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);  // Navigation with keyboard
+        io.setIniFilename("assets/config/imgui.ini"); // We don't want to save .ini file
+        io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard); // Navigation with keyboard
         io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.setConfigFlags(ImGuiBackendFlags.HasMouseCursors);   // Show mouse cursors when resizing etc
+        io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
-
 
         // ------------------------------------------------------------
         // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
-        Logger.logDebug("Setting up ImGui keyboard mapping.");
         final int[] keyMap = new int[ImGuiKey.COUNT];
         keyMap[ImGuiKey.Tab] = GLFW_KEY_TAB;
         keyMap[ImGuiKey.LeftArrow] = GLFW_KEY_LEFT;
@@ -75,7 +72,6 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // Mouse cursors mapping
-        Logger.logDebug("Setting up ImGui mouse cursor mapping.");
         mouseCursors[ImGuiMouseCursor.Arrow] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
         mouseCursors[ImGuiMouseCursor.TextInput] = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
         mouseCursors[ImGuiMouseCursor.ResizeAll] = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
@@ -88,7 +84,6 @@ public class ImGuiLayer {
 
         // ------------------------------------------------------------
         // GLFW callbacks to handle user input
-        Logger.logDebug("Setting up GLFW callbacks for user input.");
 
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
@@ -101,6 +96,7 @@ public class ImGuiLayer {
             io.setKeyShift(io.getKeysDown(GLFW_KEY_LEFT_SHIFT) || io.getKeysDown(GLFW_KEY_RIGHT_SHIFT));
             io.setKeyAlt(io.getKeysDown(GLFW_KEY_LEFT_ALT) || io.getKeysDown(GLFW_KEY_RIGHT_ALT));
             io.setKeySuper(io.getKeysDown(GLFW_KEY_LEFT_SUPER) || io.getKeysDown(GLFW_KEY_RIGHT_SUPER));
+
             if (!io.getWantCaptureKeyboard()) {
                 KeyListener.keyCallback(w, key, scancode, action, mods);
             }
@@ -157,8 +153,8 @@ public class ImGuiLayer {
         });
 
         // ------------------------------------------------------------
-        // Font setup
-        Logger.logDebug("Setting fonts up with ImGui.");
+        // Fonts configuration
+        // Read: https://raw.githubusercontent.com/ocornut/imgui/master/docs/FONTS.txt
 
         final ImFontAtlas fontAtlas = io.getFonts();
         final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
@@ -169,7 +165,6 @@ public class ImGuiLayer {
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
         fontAtlas.addFontFromFileTTF("assets/fonts/OpenSans.ttf", 32, fontConfig);
-        Logger.logInfo("Using font 'assets/fonts/OpenSans.ttf', size: 32");
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
@@ -227,13 +222,11 @@ public class ImGuiLayer {
 
     // If you want to clean a room after yourself - do it by yourself
     private void destroyImGui() {
-        Logger.logInfo("Destroying ImGui.");
         imGuiGl3.dispose();
         ImGui.destroyContext();
     }
 
     private void setupDockspace() {
-        Logger.logInfo("Setting up dockspace.");
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
 
         ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);

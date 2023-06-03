@@ -23,9 +23,8 @@ public abstract class Scene {
     protected Camera camera;
     private boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
-    protected boolean levelLoaded = false;
-
     protected GameObject activeGameObject = null;
+    protected boolean levelLoaded = false;
 
     public Scene() {
 
@@ -54,6 +53,11 @@ public abstract class Scene {
     }
 
     public abstract void update(float dt);
+    public abstract void render();
+
+    public Camera camera() {
+        return this.camera;
+    }
 
     public void sceneImgui() {
         if (activeGameObject != null) {
@@ -105,6 +109,7 @@ public abstract class Scene {
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
             for (int i=0; i < objs.length; i++) {
                 addGameObjectToScene(objs[i]);
+
                 for (Component c : objs[i].getAllComponents()) {
                     if (c.getUid() > maxCompId) {
                         maxCompId = c.getUid();
@@ -121,9 +126,5 @@ public abstract class Scene {
             Component.init(maxCompId);
             this.levelLoaded = true;
         }
-    }
-
-    public Camera camera() {
-        return this.camera;
     }
 }

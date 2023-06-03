@@ -16,22 +16,20 @@ import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene {
 
-    private GameObject obj1;
     private Spritesheet sprites;
-    private SpriteRenderer obj1Sprite;
 
     GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    Transform obj1, obj2;
 
     public LevelEditorScene() {
-        Logger.logInfo("Created LevelEditorScene object.");
+
     }
 
     @Override
     public void init() {
-        Logger.logInfo("Initializing LevelEditorScene.");
-
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
+
 
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
@@ -42,13 +40,11 @@ public class LevelEditorScene extends Scene {
             }
             return;
         }
-
     }
 
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        // TODO: FIX TEXTURE SAVE SYSTEM TO USE PATH INSTEAD OF ID
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
                         16, 16, 81, 0));
@@ -64,7 +60,6 @@ public class LevelEditorScene extends Scene {
         }
     }
 
-    float t = 0.0f;
     @Override
     public void update(float dt) {
         levelEditorStuff.update(dt);
@@ -72,7 +67,10 @@ public class LevelEditorScene extends Scene {
         for (GameObject go : this.gameObjects) {
             go.update(dt);
         }
+    }
 
+    @Override
+    public void render() {
         this.renderer.render();
     }
 

@@ -8,6 +8,7 @@ import psycho.MouseListener;
 import psycho.Window;
 
 public class GameViewWindow {
+
     private static float leftX, rightX, topY, bottomY;
 
     public static void imgui() {
@@ -50,7 +51,7 @@ public class GameViewWindow {
         float aspectWidth = windowSize.x;
         float aspectHeight = aspectWidth / Window.getTargetAspectRatio();
         if (aspectHeight > windowSize.y) {
-            // Switch to pillarbox mode
+            // We must switch to pillarbox mode
             aspectHeight = windowSize.y;
             aspectWidth = aspectHeight * Window.getTargetAspectRatio();
         }
