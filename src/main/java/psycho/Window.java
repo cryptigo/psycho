@@ -152,14 +152,14 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        Logger.logInfo("Initializing the ImGui layer.");
-        this.imguiLayer = new ImGuiLayer(glfwWindow);
-        this.imguiLayer.initImGui();
-
         Logger.logInfo("Creating the framebuffer.");
         this.framebuffer = new Framebuffer(1920, 1080);
         this.pickingTexture = new PickingTexture(1920, 1080);
         glViewport(0, 0, 1920, 1080);
+
+        Logger.logInfo("Initializing the ImGui layer.");
+        this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
+        this.imguiLayer.initImGui();
 
         // Change to level editor scene
         Window.changeScene(0);
@@ -187,11 +187,6 @@ public class Window {
             Renderer.bindShader(pickingShader);
             currentScene.render();
 
-            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-                int x = (int)MouseListener.getScreenX();
-                int y = (int)MouseListener.getScreenY();
-                Logger.logInfo(String.valueOf(pickingTexture.readPixel(x, y)));
-            }
             pickingTexture.disableWriting();
             glEnable(GL_BLEND);
 
@@ -212,6 +207,7 @@ public class Window {
 
             this.imguiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
+            MouseListener.endFrame();
 
             endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
