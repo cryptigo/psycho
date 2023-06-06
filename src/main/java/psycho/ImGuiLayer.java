@@ -10,10 +10,10 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import renderer.PickingTexture;
 import scenes.Scene;
-import util.Logger;
+
+import java.util.PropertyResourceBundle;
 
 import static org.lwjgl.glfw.GLFW.*;
-
 
 public class ImGuiLayer {
 
@@ -252,5 +252,9 @@ public class ImGuiLayer {
 
         // Dockspace
         ImGui.dockSpace(ImGui.getID("Dockspace"));
+    }
+
+    public PropertiesWindow getPropertiesWindow() {
+        return this.propertiesWindow;
     }
 }

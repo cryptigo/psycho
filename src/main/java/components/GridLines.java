@@ -1,13 +1,14 @@
 package components;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import psycho.Camera;
 import psycho.Window;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import renderer.DebugDraw;
-import util.*;
+import util.Settings;
 
 public class GridLines extends Component {
+
     @Override
     public void update(float dt) {
         Camera camera = Window.getScene().camera();

@@ -4,9 +4,10 @@ import org.joml.Vector2f;
 import renderer.Texture;
 
 public class Sprite {
+
     private float width, height;
 
-    private Texture texture;
+    private Texture texture = null;
     private Vector2f[] texCoords = {
             new Vector2f(1, 1),
             new Vector2f(1, 0),

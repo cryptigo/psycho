@@ -1,7 +1,6 @@
 package psycho;
 
 import components.Component;
-import util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,12 @@ public class GameObject {
 
     private String name;
     private List<Component> components;
-    public Transform transform;
-    private int zIndex;
+    public transient Transform transform;
+    private boolean doSerialization = true;
 
-    public GameObject(String name, Transform transform, int zIndex) {
+    public GameObject(String name) {
         this.name = name;
-        this.zIndex = zIndex;
         this.components = new ArrayList<>();
-        this.transform = transform;
 
         this.uid = ID_COUNTER++;
     }
@@ -30,8 +27,8 @@ public class GameObject {
                 try {
                     return componentClass.cast(c);
                 } catch (ClassCastException e) {
-                    Logger.logException(e);
-                    Logger.logError("Failed to cast component.");
+                    e.printStackTrace();
+                    assert false : "Error: Casting component.";
                 }
             }
         }
@@ -40,7 +37,6 @@ public class GameObject {
     }
 
     public <T extends Component> void removeComponent(Class<T> componentClass) {
-        Logger.logDebug("Removing component: " + componentClass.getName());
         for (int i=0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
@@ -50,8 +46,10 @@ public class GameObject {
         }
     }
 
-    public List<Component> getAllComponents() {
-        return this.components;
+    public void addComponent(Component c) {
+        c.generateId();
+        this.components.add(c);
+        c.gameObject = this;
     }
 
     public void update(float dt) {
@@ -72,10 +70,6 @@ public class GameObject {
         }
     }
 
-    public int zIndex() {
-        return this.zIndex;
-    }
-
     public static void init(int maxId) {
         ID_COUNTER = maxId;
     }
@@ -84,10 +78,15 @@ public class GameObject {
         return this.uid;
     }
 
-    public void addComponent(Component c) {
-        Logger.logDebug("Adding component: " + c.getClass().getName());
-        c.generateId();
-        this.components.add(c);
-        c.gameObject = this;
+    public List<Component> getAllComponents() {
+        return this.components;
+    }
+
+    public void setNoSerialize() {
+        this.doSerialization = false;
+    }
+
+    public boolean doSerialization() {
+        return this.doSerialization;
     }
 }

@@ -1,10 +1,10 @@
 package components;
 
 import imgui.ImGui;
+import psycho.GameObject;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import psycho.GameObject;
-import util.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -16,6 +16,7 @@ public abstract class Component {
     public transient GameObject gameObject = null;
 
     public void start() {
+
     }
 
     public void update(float dt) {
@@ -57,6 +58,12 @@ public abstract class Component {
                     if (ImGui.checkbox(name + ": ", val)) {
                         field.set(this, !val);
                     }
+                } else if (type == Vector2f.class) {
+                    Vector2f val = (Vector2f)value;
+                    float[] imVec = {val.x, val.y};
+                    if (ImGui.dragFloat2(name + ": ", imVec)) {
+                        val.set(imVec[0], imVec[1]);
+                    }
                 } else if (type == Vector3f.class) {
                     Vector3f val = (Vector3f)value;
                     float[] imVec = {val.x, val.y, val.z};
@@ -71,12 +78,13 @@ public abstract class Component {
                     }
                 }
 
+
                 if (isPrivate) {
                     field.setAccessible(false);
                 }
             }
         } catch (IllegalAccessException e) {
-            Logger.logException(e);
+            e.printStackTrace();
         }
     }
 

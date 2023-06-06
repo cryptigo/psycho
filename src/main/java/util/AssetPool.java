@@ -1,6 +1,9 @@
 package util;
 
 import components.Spritesheet;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import renderer.Shader;
 import renderer.Texture;
 
@@ -16,7 +19,7 @@ public class AssetPool {
     private static Map<String, Texture> textures = new HashMap<>();
     private static Map<String, Spritesheet> spritesheets = new HashMap<>();
 
-    public static void init() {
+    public static void initConfig() {
         configLoader = new IniConfigLoader("assets/config/engine.ini");
         try {
             configLoader.load();
@@ -71,19 +74,40 @@ public class AssetPool {
             configLoader.save();
         } catch (IOException e) {
             Logger.logError("Failed to save config file: 'assets/config/engine.ini'");
-            Logger.logException(e);
+            Logger.logFatalException(e);
         }
     }
 
-    public static void setConfigValue(String section, String key, String value) {
+    public static void setConfigValue(String section, String key, Object value) {
         configLoader.setValue(section, key, value);
     }
 
-    public static String getConfigValue(String section, String key) {
+    public static Object getConfigValue(String section, String key) {
         return configLoader.getValue(section, key);
     }
 
     public static void removeConfigValue(String section, String key) {
         configLoader.removeValue(section, key);
     }
+
+    public static int getConfigValueInt(String section, String key) {
+        return configLoader.getValueInt(section, key);
+    }
+
+    public static float getConfigValueFloat(String section, String key) {
+        return configLoader.getValueFloat(section, key);
+    }
+
+    public static Vector2f getConfigValueVector2d(String section, String key) {
+        return configLoader.getValueVector2f(section, key);
+    }
+
+    public static Vector3f getConfigValueVector3f(String section, String key) {
+        return configLoader.getValueVector3f(section, key);
+    }
+
+    public static Vector4f getConfigValueVector4f(String section, String key) {
+        return configLoader.getValueVector4f(section, key);
+    }
+
 }

@@ -2,11 +2,10 @@ package scenes;
 
 import psycho.Window;
 import scenes.Scene;
-import util.Logger;
 
 public class LevelScene extends Scene {
     public LevelScene() {
-        Logger.logInfo("Created LevelScene object.");
+        System.out.println("Inside level scene");
         Window.get().r = 1;
         Window.get().g = 1;
         Window.get().b = 1;

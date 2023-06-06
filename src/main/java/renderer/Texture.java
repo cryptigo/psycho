@@ -1,7 +1,6 @@
 package renderer;
 
 import org.lwjgl.BufferUtils;
-import util.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

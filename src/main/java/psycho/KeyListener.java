@@ -1,7 +1,5 @@
 package psycho;
 
-import util.Logger;
-
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -10,7 +8,7 @@ public class KeyListener {
     private boolean keyPressed[] = new boolean[350];
 
     private KeyListener() {
-        Logger.logInfo("KeyListener Object created.");
+
     }
 
     public static KeyListener get() {
@@ -23,15 +21,23 @@ public class KeyListener {
 
     public static void keyCallback(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_PRESS) {
-            Logger.logInfo("Key Pressed: " + key);
             get().keyPressed[key] = true;
         } else if (action == GLFW_RELEASE) {
-            Logger.logInfo("Key Released: " + key);
             get().keyPressed[key] = false;
         }
     }
 
     public static boolean isKeyPressed(int keyCode) {
         return get().keyPressed[keyCode];
+    }
+
+    private boolean kp = false;
+    public static boolean isKeyPressedOnce(int key) {
+        if(KeyListener.isKeyPressed(key) && !get().kp) {
+            get().kp = true;
+        } else if (!KeyListener.isKeyPressed(key)) {
+            get().kp = false;
+        }
+        return false;
     }
 }

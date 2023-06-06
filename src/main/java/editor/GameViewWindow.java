@@ -3,9 +3,9 @@ package editor;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
-import org.joml.Vector2f;
 import psycho.MouseListener;
 import psycho.Window;
+import org.joml.Vector2f;
 
 public class GameViewWindow {
 

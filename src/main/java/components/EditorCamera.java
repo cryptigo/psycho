@@ -1,14 +1,14 @@
 package components;
 
-import org.joml.Vector2f;
 import psycho.Camera;
 import psycho.KeyListener;
 import psycho.MouseListener;
+import org.joml.Vector2f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_DECIMAL;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class EditorCamera extends Component {
+
     private float dragDebounce = 0.032f;
 
     private Camera levelEditorCamera;
@@ -16,7 +16,7 @@ public class EditorCamera extends Component {
     private boolean reset = false;
 
     private float lerpTime = 0.0f;
-    private float dragSensitivity = 0.30f;
+    private float dragSensitivity = 30.0f;
     private float scrollSensitivity = 0.1f;
 
     public EditorCamera(Camera levelEditorCamera) {
@@ -48,6 +48,15 @@ public class EditorCamera extends Component {
             levelEditorCamera.addZoom(addValue);
         }
 
+
+
+        if (KeyListener.isKeyPressedOnce(GLFW_KEY_KP_ADD)) {
+            levelEditorCamera.addZoom(10);
+        }
+        if (KeyListener.isKeyPressedOnce(GLFW_KEY_KP_SUBTRACT) ) {
+            levelEditorCamera.addZoom(-10);
+        }
+
         if (KeyListener.isKeyPressed(GLFW_KEY_KP_DECIMAL)) {
             reset = true;
         }
@@ -56,10 +65,14 @@ public class EditorCamera extends Component {
             levelEditorCamera.position.lerp(new Vector2f(), lerpTime);
             levelEditorCamera.setZoom(this.levelEditorCamera.getZoom() +
                     ((1.0f - levelEditorCamera.getZoom()) * lerpTime));
-            this.lerpTime = 0.0f;
-            levelEditorCamera.position.set(0f, 0f);
-            this.levelEditorCamera.setZoom(1.0f);
-            reset = false;
+            this.lerpTime += 0.1f * dt;
+            if (Math.abs(levelEditorCamera.position.x) <= 5.0f &&
+                    Math.abs(levelEditorCamera.position.y) <= 5.0f) {
+                this.lerpTime = 0.0f;
+                levelEditorCamera.position.set(0f, 0f);
+                this.levelEditorCamera.setZoom(1.0f);
+                reset = false;
+            }
         }
     }
 }

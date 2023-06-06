@@ -1,14 +1,14 @@
 package renderer;
 
+import psycho.Window;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import util.AssetPool;
+import math.PMath;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import math.PMath;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import psycho.Window;
-import util.*;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -16,10 +16,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class DebugDraw {
-    private static int MAX_LINES = 5000;
+    private static int MAX_LINES = 500;
 
     private static List<Line2D> lines = new ArrayList<>();
-
     // 6 floats per vertex, 2 vertices per line
     private static float[] vertexArray = new float[MAX_LINES * 6 * 2];
     private static Shader shader = AssetPool.getShader("assets/shaders/debugLine2D.glsl");
@@ -30,11 +29,11 @@ public class DebugDraw {
     private static boolean started = false;
 
     public static void start() {
-        // Generate the VAO
+        // Generate the vao
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
-        // Create the vbo and buffer memory
+        // Create the vbo and buffer some memory
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, vertexArray.length * Float.BYTES, GL_DYNAMIC_DRAW);
@@ -64,8 +63,9 @@ public class DebugDraw {
         }
     }
 
+
     public static void draw() {
-        if (lines.size() <= 0) return;;
+        if (lines.size() <= 0) return;
 
         int index = 0;
         for (Line2D line : lines) {
@@ -89,7 +89,7 @@ public class DebugDraw {
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertexArray, 0, lines.size() * 6 * 2));
 
-        // Use the shader
+        // Use our shader
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
@@ -102,7 +102,7 @@ public class DebugDraw {
         // Draw the batch
         glDrawArrays(GL_LINES, 0, lines.size() * 2);
 
-        // Disable location
+        // Disable Location
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -110,10 +110,10 @@ public class DebugDraw {
         // Unbind shader
         shader.detach();
     }
-    // ------------------------------------------
-    // Add Line2D methods
-    // ------------------------------------------
 
+    // ==================================================
+    // Add line2D methods
+    // ==================================================
     public static void addLine2D(Vector2f from, Vector2f to) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
         addLine2D(from, to, new Vector3f(0, 1, 0), 1);
@@ -128,10 +128,11 @@ public class DebugDraw {
         DebugDraw.lines.add(new Line2D(from, to, color, lifetime));
     }
 
-    // ------------------------------------------
+    // ==================================================
     // Add Box2D methods
-    // ------------------------------------------
+    // ==================================================
     public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
         addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
     }
 
@@ -139,7 +140,8 @@ public class DebugDraw {
         addBox2D(center, dimensions, rotation, color, 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color, int lifetime) {
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
+                                Vector3f color, int lifetime) {
         Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).mul(0.5f));
         Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).mul(0.5f));
 
@@ -160,10 +162,11 @@ public class DebugDraw {
         addLine2D(vertices[2], vertices[3], color, lifetime);
     }
 
-    // ------------------------------------------
+    // ==================================================
     // Add Circle methods
-    // ------------------------------------------
+    // ==================================================
     public static void addCircle(Vector2f center, float radius) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
         addCircle(center, radius, new Vector3f(0, 1, 0), 1);
     }
 
@@ -189,5 +192,4 @@ public class DebugDraw {
 
         addLine2D(points[points.length - 1], points[0], color, lifetime);
     }
-
 }

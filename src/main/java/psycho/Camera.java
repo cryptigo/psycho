@@ -3,7 +3,6 @@ package psycho;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import util.Logger;
 
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
@@ -13,7 +12,6 @@ public class Camera {
     private float zoom = 1.0f;
 
     public Camera(Vector2f position) {
-        Logger.logInfo("Created Camera Object");
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
@@ -24,7 +22,8 @@ public class Camera {
 
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom, 0.0f, projectionSize.y * this.zoom, 0.0f, 100.0f);
+        projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom,
+                0.0f, projectionSize.y * zoom, 0.0f, 100.0f);
         projectionMatrix.invert(inverseProjection);
     }
 

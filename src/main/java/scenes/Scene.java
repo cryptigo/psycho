@@ -8,6 +8,7 @@ import imgui.ImGui;
 import psycho.Camera;
 import psycho.GameObject;
 import psycho.GameObjectDeserializer;
+import psycho.Transform;
 import renderer.Renderer;
 
 import java.io.FileWriter;
@@ -24,20 +25,11 @@ public abstract class Scene {
     protected Camera camera;
     private boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
 
     public Scene() {
 
     }
-
-    public GameObject getGameObject(int gameObjectId) {
-        Optional<GameObject> result = this.gameObjects.stream()
-                .filter(gameObject -> gameObject.getUid() == gameObjectId)
-                .findFirst();
-        return result.orElse(null);
-    }
-
 
     public void init() {
 
@@ -61,6 +53,13 @@ public abstract class Scene {
         }
     }
 
+    public GameObject getGameObject(int gameObjectId) {
+        Optional<GameObject> result = this.gameObjects.stream()
+                .filter(gameObject -> gameObject.getUid() == gameObjectId)
+                .findFirst();
+        return result.orElse(null);
+    }
+
     public abstract void update(float dt);
     public abstract void render();
 
@@ -68,9 +67,15 @@ public abstract class Scene {
         return this.camera;
     }
 
-
     public void imgui() {
 
+    }
+
+    public GameObject createGameObject(String name) {
+        GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
+        return go;
     }
 
     public void saveExit() {
@@ -82,7 +87,13 @@ public abstract class Scene {
 
         try {
             FileWriter writer = new FileWriter("assets/saves/level.txt");
-            writer.write(gson.toJson(this.gameObjects));
+            List<GameObject> objsToSerialize = new ArrayList<>();
+            for (GameObject obj : this.gameObjects) {
+                if (obj.doSerialization()) {
+                    objsToSerialize.add(obj);
+                }
+            }
+            writer.write(gson.toJson(objsToSerialize));
             writer.close();
         } catch(IOException e) {
             e.printStackTrace();

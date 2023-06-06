@@ -3,16 +3,11 @@ package psycho;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import renderer.DebugDraw;
-import renderer.Renderer;
-import renderer.Framebuffer;
-import renderer.PickingTexture;
-import renderer.Shader;
+import renderer.*;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
-import util.*;
-
+import util.AssetPool;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -39,8 +34,8 @@ public class Window {
         this.height = 1080;
         this.title = "Psycho Engine";
         r = 1;
-        g = 1;
         b = 1;
+        g = 1;
         a = 1;
     }
 
@@ -56,6 +51,7 @@ public class Window {
                 assert false : "Unknown scene '" + newScene + "'";
                 break;
         }
+
         currentScene.load();
         currentScene.init();
         currentScene.start();
@@ -74,7 +70,7 @@ public class Window {
     }
 
     public void run() {
-        Logger.logInfo("LWJGL Version: " + Version.getVersion());
+        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
         init();
         loop();
@@ -83,40 +79,32 @@ public class Window {
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
 
-        // Terminate GLFW and free the error callback
+        // Terminate GLFW and the free the error callback
         glfwTerminate();
-
         glfwSetErrorCallback(null).free();
     }
 
     public void init() {
-        Logger.logInfo("Initializing Window");
         // Setup an error callback
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW
         if (!glfwInit()) {
-            Exception e = new IllegalStateException("Unable to initialize GLFW.");
-            Logger.logFatalException(e);
+            throw new IllegalStateException("Unable to initialize GLFW.");
         }
 
         // Configure GLFW
-        Logger.logInfo("Configuring GLFW.");
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the window
-        Logger.logInfo("Creating the GLFW window.");
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
-            Exception e = new IllegalStateException("Failed to create the GLFW window.");
-            Logger.logFatalException(e);
+            throw new IllegalStateException("Failed to create the GLFW window.");
         }
 
-        // Setup callbacks
-        Logger.logInfo("Setting up GLFW callbacks.");
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
@@ -127,41 +115,30 @@ public class Window {
         });
 
         // Make the OpenGL context current
-        Logger.logInfo("Making the OpenGL context current.");
         glfwMakeContextCurrent(glfwWindow);
-
-        // Enable VSync
-        Logger.logInfo("Enabling VSync for the GLFW window.");
+        // Enable v-sync
         glfwSwapInterval(1);
 
         // Make the window visible
-        Logger.logInfo("Setting window to be visible.");
         glfwShowWindow(glfwWindow);
-
-        // Enable OpenGL LWJGL interop
-        Logger.logInfo("Creating LWJGL OpenGL capabilities.");
-        GL.createCapabilities();
 
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
-        Logger.logInfo("Setting OpenGL blend function.");
-        Logger.logInfo("GL_BLEND_FUNCTION: GL_ONE, GL_ONE_MINUS_SRC_ALPHA");
+        GL.createCapabilities();
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        Logger.logInfo("Creating the framebuffer.");
         this.framebuffer = new Framebuffer(1920, 1080);
         this.pickingTexture = new PickingTexture(1920, 1080);
         glViewport(0, 0, 1920, 1080);
 
-        Logger.logInfo("Initializing the ImGui layer.");
         this.imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
         this.imguiLayer.initImGui();
 
-        // Change to level editor scene
         Window.changeScene(0);
     }
 
@@ -172,8 +149,9 @@ public class Window {
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
         Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
+
         while (!glfwWindowShouldClose(glfwWindow)) {
-            // Poll for events
+            // Poll events
             glfwPollEvents();
 
             // Render pass 1. Render to picking texture
@@ -190,7 +168,7 @@ public class Window {
             pickingTexture.disableWriting();
             glEnable(GL_BLEND);
 
-            // Render pass 2. Render game
+            // Render pass 2. Render actual game
             DebugDraw.beginFrame();
 
             this.framebuffer.bind();
@@ -213,7 +191,7 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
-        Logger.logInfo("Saving and exiting the scene.");
+
         currentScene.saveExit();
     }
 
@@ -239,5 +217,9 @@ public class Window {
 
     public static float getTargetAspectRatio() {
         return 16.0f / 9.0f;
+    }
+
+    public static ImGuiLayer getImguiLayer() {
+        return get().imguiLayer;
     }
 }
