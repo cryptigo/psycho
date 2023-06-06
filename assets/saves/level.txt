@@ -1,6 +1,6 @@
 [
   {
-    "uid": 1,
+    "uid": 0,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -62,7 +62,7 @@
     "doSerialization": true
   },
   {
-    "uid": 2,
+    "uid": 1,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -124,7 +124,7 @@
     "doSerialization": true
   },
   {
-    "uid": 3,
+    "uid": 2,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -186,7 +186,7 @@
     "doSerialization": true
   },
   {
-    "uid": 4,
+    "uid": 3,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -248,7 +248,7 @@
     "doSerialization": true
   },
   {
-    "uid": 5,
+    "uid": 4,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -310,7 +310,7 @@
     "doSerialization": true
   },
   {
-    "uid": 6,
+    "uid": 5,
     "name": "Sprite_Object_Gen",
     "components": [
       {
@@ -366,6 +366,68 @@
             ]
           },
           "uid": 119
+        }
+      }
+    ],
+    "doSerialization": true
+  },
+  {
+    "uid": 11,
+    "name": "Sprite_Object_Gen",
+    "components": [
+      {
+        "type": "psycho.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "scale": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "rotation": 0.0,
+          "zIndex": 0,
+          "uid": 139
+        }
+      },
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "width": 16.0,
+            "height": 16.0,
+            "texture": {
+              "filepath": "assets/images/spritesheets/decorationsAndBlocks.png",
+              "width": 112,
+              "height": 192
+            },
+            "texCoords": [
+              {
+                "x": 1.0,
+                "y": 1.0
+              },
+              {
+                "x": 1.0,
+                "y": 0.9166667
+              },
+              {
+                "x": 0.85714287,
+                "y": 0.9166667
+              },
+              {
+                "x": 0.85714287,
+                "y": 1.0
+              }
+            ]
+          },
+          "uid": 140
         }
       }
     ],
