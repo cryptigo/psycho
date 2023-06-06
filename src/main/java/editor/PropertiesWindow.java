@@ -2,6 +2,9 @@ package editor;
 
 import components.NonPickable;
 import imgui.ImGui;
+import physics2d.components.Box2DCollider;
+import physics2d.components.CircleCollider;
+import physics2d.components.Rigidbody2D;
 import psycho.GameObject;
 import psycho.MouseListener;
 import renderer.PickingTexture;
@@ -39,6 +42,29 @@ public class PropertiesWindow {
     public void imgui() {
         if (activeGameObject != null) {
             ImGui.begin("Properties");
+
+            if (ImGui.beginPopupContextWindow("ComponentAdder")) {
+                if (ImGui.menuItem("Add Rigidbody")) {
+                    if (activeGameObject.getComponent(Rigidbody2D.class) == null &&
+                        activeGameObject.getComponent(CircleCollider.class) == null) {
+                        activeGameObject.addComponent(new Rigidbody2D());
+                    }
+                }
+                if (ImGui.menuItem("Add Box Collider")) {
+                    if (activeGameObject.getComponent(Box2DCollider.class) == null) {
+                        activeGameObject.addComponent(new Box2DCollider());
+                    }
+                }
+                if (ImGui.menuItem("Add Circle Collider")) {
+                    if (activeGameObject.getComponent(CircleCollider.class) == null &&
+                        activeGameObject.getComponent(Box2DCollider.class) == null) {
+                        activeGameObject.addComponent(new CircleCollider());
+                    }
+                }
+
+                ImGui.endPopup();
+
+            }
             activeGameObject.imgui();
             ImGui.end();
         }
