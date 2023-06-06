@@ -1,6 +1,7 @@
 package psycho;
 
 import components.Component;
+import editor.PImGui;
 import org.joml.Vector2f;
 
 public class Transform extends Component {
@@ -35,6 +36,14 @@ public class Transform extends Component {
     public void copy(Transform to) {
         to.position.set(this.position);
         to.scale.set(this.scale);
+    }
+
+    @Override
+    public void imgui() {
+        PImGui.drawVec2Control("Position", this.position);
+        PImGui.drawVec2Control("Scale", this.scale, 32.0f);
+        PImGui.dragFloat("Rotation", this.rotation);
+        PImGui.dragInt("Z-Index", this.zIndex);
     }
 
     @Override
