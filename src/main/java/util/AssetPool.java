@@ -24,8 +24,9 @@ public class AssetPool {
         try {
             configLoader.load();
         } catch (IOException e) {
-            Logger.logError("Failed to load config file: '" + configLoader.getFilename() + "'");
-            Logger.logException(e);
+            e.printStackTrace();
+//            Logger.logError("Failed to load config file: '" + configLoader.getFilename() + "'");
+//            Logger.logException(e);
         }
     }
 
@@ -51,7 +52,7 @@ public class AssetPool {
     public static Spritesheet getSpritesheet(String resourceName) {
         File file = new File(resourceName);
         if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
-            Logger.logError("Tried to access spritesheet: '" + resourceName + "' and it has not been added to the asset pool.");
+//            Logger.logError("Tried to access spritesheet: '" + resourceName + "' and it has not been added to the asset pool.");
             assert false : "";
         }
         return AssetPool.spritesheets.getOrDefault(file.getAbsolutePath(), null);
@@ -73,8 +74,8 @@ public class AssetPool {
         try {
             configLoader.save();
         } catch (IOException e) {
-            Logger.logError("Failed to save config file: 'assets/config/engine.ini'");
-            Logger.logFatalException(e);
+//            Logger.logError("Failed to save config file: 'assets/config/engine.ini'");
+//            Logger.logFatalException(e);
         }
     }
 

@@ -1,6 +1,4 @@
-package util;
-
-import org.joml.Vector4f;
+package util.enums;
 
 public enum GLColor {
     // Basic colors

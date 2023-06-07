@@ -48,15 +48,6 @@ public class EditorCamera extends Component {
             levelEditorCamera.addZoom(addValue);
         }
 
-
-
-        if (KeyListener.isKeyPressedOnce(GLFW_KEY_KP_ADD)) {
-            levelEditorCamera.addZoom(10);
-        }
-        if (KeyListener.isKeyPressedOnce(GLFW_KEY_KP_SUBTRACT) ) {
-            levelEditorCamera.addZoom(-10);
-        }
-
         if (KeyListener.isKeyPressed(GLFW_KEY_KP_DECIMAL)) {
             reset = true;
         }
