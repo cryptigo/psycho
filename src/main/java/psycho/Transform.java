@@ -40,6 +40,7 @@ public class Transform extends Component {
 
     @Override
     public void imgui() {
+        gameObject.name = PImGui.inputText("Name: ", gameObject.name);
         PImGui.drawVec2Control("Position", this.position);
         PImGui.drawVec2Control("Scale", this.scale, 32.0f);
         this.rotation = PImGui.dragFloat("Rotation", this.rotation);
